@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>Document</title>
+
+   
+</head>
+<body>
+        <script>
+                window.addEventListener('load',function(){
+                    console.log('load');
+                    const endpointAddData = '/message/add';
+                    const endpointShowData = '/message';
+
+                    showData = function(data){
+                        console.log('aqui en showdat')
+                        console.log(data)
+                    let html = '';
+                    html+'<MARQUEE BGCOLOR=yellow>'+ data.message+'</MARQUEE>';
+                    document.getElementById("results").innerHTML = html        }
+
+                    getData(endpointShowData, showData)    
+                    document.getElementById('btn').addEventListener('click',function(event){
+                        console.log('click');
+                        event.preventDefault();
+                        var message =document.getElementById('message').value;
+                        
+                        if(message == ''){
+                            alert('Ingrese un mensaje');
+                            return;
+                        }else{
+                            //dbFunctions.postData(endpointAddData,{message})
+                            //console.log('mindex: '+message);
+                            postData(endpointAddData, {message}, showData, endpointShowData);
+                            document.getElementById('message').value=''
+                        }
+                    })
+
+                    function getData(endpoint, showData){
+                        console.log('getdataHTML')
+                        fetch(endpoint)
+                        .then((res)=>res.json())
+                        .then((data)=>showData(data))
+                        .catch((err)=>console.log(err))
+                    }
+                    
+                    function postData(endpoint, data, showData, endpointShowData) {
+                        fetch(endpoint, {
+                            method: 'POST', // or 'PUT'
+                            body: JSON.stringify(data),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then((res) => res.json())
+                        .then((data) => this.getData(endpointShowData, showData))
+                        .catch((err) => console.log(err))
+                    }
+
+                })
+                
+            </script>
+   <form>
+       <div>
+           <label for="mensaje">mensaje</label>
+               <input type="text" id="message" />
+       </div>
+       <button id="btn" type="submit">submit</button>      
+       <div id='results'></div>
+        <MARQUEE BGCOLOR=yellow> hola a todos </MARQUEE>
+   </form></body>
+</html>
